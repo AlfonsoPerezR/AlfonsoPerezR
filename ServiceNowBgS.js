@@ -357,3 +357,28 @@ for (i=0;i<issues.length;i++){
     gs.print('Updating: '+sim.getValue('name')+' | for user: '+user_name+' | with hardware: '+smartphone.getValue('name'));
     sim.update();
 }
+
+
+
+// Adding users to a ServiceNow Group - d16364bc471b01d0c98e6e51e36d43de
+var user_names = ['MORAPR', 
+'DOSCPM', 
+'FONMSB', 
+'GESJFM']
+
+for (i=0; i<user_names.length; i++){
+    var user = new GlideRecord('sys_user');
+    user.addQuery('user_name',user_names[i]);
+    user.query();
+    if (user.next()){
+        gs.print('Found user: '+user.getValue('name'));
+        var group_member = new GlideRecord('sys_user_grmember');
+        group_member.setValue('user', user.getValue('sys_id'));
+        group_member.setValue('group', 'd16364bc471b01d0c98e6e51e36d43de');
+        group_member.insert();
+    } else {
+        gs.print('Not found user: '+user_names[i]);
+    }
+    
+
+}
